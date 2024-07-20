@@ -4,71 +4,77 @@ class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
 
   @override
-  _RegistrationScreenState createState() => _RegistrationScreenState();
+  State<RegistrationScreen> createState() => _RegistrationScreenState();
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
-  String _name, _email, _password, _photoUrl;
-  int _age;
-
-  // Метод для загрузки фото профиля
-  void _pickImage() async {
-    // Логика для выбора и загрузки изображения
-  }
-
-  // Метод для регистрации
+  late String _name, _email, _password, _photoUrl;
+  late int _age;
+// Метод для регистрации
   void _register() async {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
       // Логика для регистрации пользователя и сохранения данных в Firestore
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Регистрация'),
-      ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: EdgeInsets.all(16.0),
-          children: <Widget>[
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Имя'),
-              validator: (value) => value.isEmpty ? 'Введите имя' : null,
-              onSaved: (value) => _name = value,
-            ),
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Возраст'),
-              keyboardType: TextInputType.number,
-              validator: (value) => value.isEmpty ? 'Введите возраст' : null,
-              onSaved: (value) => _age = int.parse(value),
-            ),
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Email'),
-              keyboardType: TextInputType.emailAddress,
-              validator: (value) =>
-                  !value.contains('@') ? 'Введите корректный email' : null,
-              onSaved: (value) => _email = value,
-            ),
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Пароль'),
-              obscureText: true,
-              validator: (value) => value.length < 6
-                  ? 'Пароль должен быть не менее 6 символов'
-                  : null,
-              onSaved: (value) => _password = value,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _register,
-              child: Text('Зарегистрироваться'),
-            ),
-          ],
-        ),
+    return Form(
+      key: _formKey,
+      child: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: <Widget>[
+          TextFormField(
+            decoration: const InputDecoration(labelText: 'Имя'),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Введите имя';
+              }
+              return null;
+            },
+            // onSaved: (value) => _name = value,
+          ),
+          TextFormField(
+            decoration: const InputDecoration(labelText: 'Возраст'),
+            keyboardType: TextInputType.number,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Введите возраст';
+              }
+              return null;
+            },
+            onSaved: (value) => _age = int.parse(value!),
+          ),
+          TextFormField(
+            decoration: const InputDecoration(labelText: 'Email'),
+            keyboardType: TextInputType.emailAddress,
+            validator: (value) {
+              if (value == null || !value.contains('@')) {
+                return 'Введите корректный email';
+              }
+              return null;
+            },
+            onSaved: (value) => _email = value!,
+          ),
+          TextFormField(
+            decoration: const InputDecoration(labelText: 'Пароль'),
+            obscureText: true,
+            validator: (value) {
+              if (value == null || value.length < 6) {
+                return 'Пароль должен быть не менее 6 символов';
+              }
+              return null;
+            },
+            onSaved: (value) => _password = value!,
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _register,
+            child: const Text('Зарегистрироваться'),
+          ),
+        ],
       ),
     );
   }
